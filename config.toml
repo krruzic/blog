@@ -1,0 +1,23 @@
+baseURL = "https://blog.krruzic.xyz"
+languageCode = "en-us"
+title = "When it's too long for mastodon"
+disableKinds = ["taxonomy", "taxonomyTerm"]
+staticDir = ["static", "themes/Niello/static"]
+theme = Niello
+[params]
+keywords = "rust, blog, tips"
+description = "Things I needed to write down"
+copyright = "&#xA9; 2019 by Kristopher. All Rights Reserved."
+ga = "UA-******"
+
+[menu]
+    [[menu.niello]]
+    name = "Home"
+    url = "/"
+    weight = 1
+
+    [[menu.niello]]
+    name = "Contact"
+    url = "/post/contact/"
+    weight = 2
+    
