@@ -1,27 +1,68 @@
-baseURL = "https://blog.krruzic.xyz"
-languageCode = "en-us"
-title = "When it's too long for mastodon"
+base_url = "localhost"
+default_language = "en"
+title = "A blog about Rust and whatever else"
 disableKinds = ["taxonomy", "taxonomyTerm"]
-staticDir = ["static", "themes/Niello/static"]
-theme = Niello
-pygmentsCodefences = true
-pygmentsStyle = "pygments"
+theme = "terminimal"
+highlight_code = true
+hightlight_theme = "base16-ocean-dark"
+compile_sass = true
 
 
-[params]
-keywords = "rust, blog, tips"
-description = "Things I needed to write down"
-copyright = "&#xA9; 2019 by Kristopher. All Rights Reserved."
-ga = "UA-******"
+# Optional: enable tags
+taxonomies = [
+    {name = "tags"}
+]
 
-[menu]
-    [[menu.niello]]
-    name = "Home"
-    url = "/"
-    weight = 1
+[extra]
+author = "Kristopher Ruzic"
+copyright_html = ""
+# One of: blue, green, orange, pink, red.
+# Defaults to blue.
+accent_color = "orange"
 
-    [[menu.niello]]
-    name = "Contact"
-    url = "/post/contact/"
-    weight = 2
-    
+# One of: blue, dark, green, orange, pink, red.
+# Enabling dark background will also modify primary font color
+# to be darker.
+# Defaults to accent color (or, if not accent color specified, to blue).
+background_color = "dark"
+
+logo_text = "This is a blog."
+
+# The logo link - defaults to base_url.
+#logo_home_link = "/take/me/away!"
+
+# menu is enabled by adding menu_items (optional)
+menu_items = [
+    # each of these is optional, name and url are required
+    # $BASE_URL is going to be substituted by base_url from configuration
+    {name = "blog", url = "$BASE_URL"},
+
+    # tags should only be enabled if you have "tags" taxonomy
+    # see documentation below for more details
+    {name = "tags", url = "$BASE_URL/tags"},
+    {name = "about me", url = "https://krruzic.xyz"},
+
+    # set newtab to true to make the link open in new tab
+    {name = "source", url = "https://github.com/krruzic/blog", newtab = true},
+]
+
+# Whether to show links to earlier and later posts
+# on each post page (defaults to true).
+enable_post_view_navigation = true
+
+# The text shown at the bottom of a post,
+# before earlier/later post links.
+# Defaults to "Thanks for reading! Read other posts?"
+post_view_navigation_prompt = "More..."
+
+# Use full Hack character set, not just a subset.
+# Switch this to true if you need full unicode support.
+# Defaults to false.
+use_full_hack_font = true
+
+# Optional: Global favicon URL and mimetype.
+#           Mimetype defaults to "image/x-icon".
+#           The URL should point at a file located
+#           in your site's "static" directory.
+# favicon = "/favicon.png"
+# favicon_mimetype = "image/png"
