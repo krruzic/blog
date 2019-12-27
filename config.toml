@@ -1,12 +1,10 @@
-base_url = "localhost"
+base_url = "blog.krruzic.xyz"
 default_language = "en"
 title = "A blog about Rust and whatever else"
-disableKinds = ["taxonomy", "taxonomyTerm"]
 theme = "terminimal"
 highlight_code = true
 hightlight_theme = "base16-ocean-dark"
 compile_sass = true
-
 
 # Optional: enable tags
 taxonomies = [
