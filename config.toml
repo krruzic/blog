@@ -5,6 +5,7 @@ theme = "terminimal"
 highlight_code = true
 hightlight_theme = "base16-ocean-dark"
 compile_sass = true
+generate_rss = true
 
 # Optional: enable tags
 taxonomies = [
