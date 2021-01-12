@@ -1,0 +1,21 @@
+{% extends "index.html" %}
+{% block content %}
+  <h1>tag: #{{ term.name }} ({{ term.pages | length }} post{{ term.pages | length | pluralize }})</h1>
+  <a href="/tags">
+    Show all tags
+  </a>
+
+  <ul>
+  {%- for page in term.pages %}
+    {%- if page.draft %}
+      {% continue %}
+    {% endif -%}
+    <li class="post-list">
+      <a href="{{ page.permalink | safe }}">
+          <span class="post-date">{{ page.date }}</span>
+          :: <span class="post-list-title">{{ page.title }}</span></a>
+      {{ macros::taglist(page=page) }}
+    </li>
+  {% endfor -%}
+  </ul>
+{% endblock content %}

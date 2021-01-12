@@ -1,0 +1,12 @@
+{% extends "index.html" %}
+{% block content %}
+  <article class="post-container">
+    <div class="post-meta">
+      <p class="post-title"><a href="{{ page.permalink | safe }}">{{ page.title }}</a></p>
+      {{ page.date }} {{ macros::taglist(page=page) }}
+    </div>
+    <div class="post">
+      <div class="post-content">{{ page.content | safe }}</div>
+    </div>
+  </article>
+{% endblock content %}

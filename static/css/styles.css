@@ -1,0 +1,176 @@
+:root {
+  --base-text-color: #ddd;
+  --base-bg-color: #010101;
+  --base-accent-color: #c62828;
+}
+body {
+  height: 100%;
+  margin: 0;
+  background: var(--base-bg-color);
+}
+h1 {
+  font-size: 2rem;
+  color: var(--base-text-color);
+  margin-bottom: 0.25rem;
+}
+a {
+  color: var(--base-text-color);
+  text-decoration: underline;
+}
+p code {
+  color: var(--base-text-color);
+  background-color: #666;
+  border: 1px solid #444;
+}
+img {
+  max-width: 100%;
+  max-height: 100%;
+}
+p {
+  color: var(--base-text-color);
+}
+pre {
+  padding: 0.5rem;
+  overflow: auto;
+  border: 1px solid #dddddd22;
+  filter: brightness(120%);
+}
+.main-header {
+  display: flex;
+  flex-direction: column;
+}
+#content {
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+.scroll-gradient {
+  background: linear-gradient(var(--base-bg-color) 33%, rgba(28, 28, 28, 0)),
+    linear-gradient(rgba(28, 28, 28, 0), var(--base-bg-color) 66%) 0 100%,
+    radial-gradient(farthest-side at 50% 0, rgba(255, 255, 255, 0.2), rgba(0, 0, 0, 0)),
+    radial-gradient(farthest-side at 50% 100%, rgba(255, 255, 255, 0.2), rgba(0, 0, 0, 0)) 0 100%;
+  background-color: var(--base-bg-color);
+  background-repeat: no-repeat;
+  background-attachment: local, local, scroll, scroll;
+  background-size: 100% 10px, 100% 10px, 100% 50px, 100% 50px;
+}
+
+#sidebar {
+  display: inline-flex;
+  max-width: 20vw;
+  flex-flow: column nowrap;
+  align-items: baseline;
+  border-right: 1px solid white;
+  padding: 2rem 1rem;
+}
+#sidebar-photo {
+  object-fit: cover;
+  max-height: 80%;
+  max-width: 75%;
+  padding-bottom: 0.5rem;
+}
+.about-desc {
+  font-size: 1rem;
+}
+.about-desc p {
+  margin-bottom: 0.5rem;
+}
+#maincontent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0 2rem;
+  border-top: 1px solid white;
+  border-right: 1px solid white;
+  margin: 2rem;
+}
+
+.blognav {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  min-width: 100%;
+  list-style: none;
+}
+.blognav li:not(:last-of-type) {
+  margin-right: 0.5rem;
+  margin-bottom: 1vh;
+  color: var(--base-text-color);
+}
+
+.page-content {
+  flex: 1;
+  overflow: auto;
+}
+.list-post-container,
+.post-container {
+  margin: 1rem;
+  color: var(--base-text-color);
+  width: 95%;
+  min-height: min-content;
+}
+.list-post-container {
+  border-bottom: 1px solid white;
+  border-left: 1px solid white;
+  margin-top: 0.25rem;
+  margin-left: 0;
+  margin-right: 0;
+  width: 80%;
+}
+.list-post {
+  margin-left: 0.5rem;
+  padding-left: 1rem;
+}
+.list-post,
+.post {
+  padding-top: 0.2rem;
+  padding-right: 1rem;
+  padding-bottom: 1rem;
+  width: 80%;
+}
+
+.list-post-title {
+  padding-left: 0.5rem;
+}
+.list-post-title,
+.post-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-top: 0.4rem;
+  line-height: 1.2;
+  margin-bottom: 0;
+}
+.post-summary {
+}
+.post-summary p {
+  margin-top: 0.3rem;
+}
+.list-post-title a,
+.post-title a {
+  text-decoration: none;
+}
+.list-post-title a:hover,
+.post-title a:hover {
+  opacity: 0.7;
+}
+
+.post-tag {
+  color: var(--base-text-color);
+  filter: brightness(70%);
+}
+.post-tag:hover {
+  opacity: 0.7;
+}
+.post-content h1 {
+  font-size: 1.15rem;
+}
+
+.post-meta {
+  border-bottom: 4px dashed white;
+  padding-bottom: 1rem;
+}

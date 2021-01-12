@@ -1,0 +1,56 @@
+{% import "head.html" as head %}
+{% import "macros.html" as macros %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      {{ head::default_head(page_title = "Home") }}
+  </head>
+  <body>
+    <div id="content">
+        <div id="sidebar">
+          <img src="/me_vertical_dark2.jpg" id="sidebar-photo"/>
+          <div class="about-desc">
+            <p>I&#39;m Kristopher Ruzic, a software developer from Calgary. See more <a href="/about">about me</a></p>
+            <a href="/resume.pdf">Resume</a>
+          </div>
+        </div>
+        <div id="maincontent">
+          <div class="main-header">
+            <h1>My Thoughts Go Here</h1>
+            <ul class="blognav">
+              <li><a href="/tags">tags</a></li>
+              {# <li><a href="/archive">archive</a></li> #}
+            </ul>
+          </div>
+          <div class="page-content scroll-gradient">
+            {% block content %}
+            {% for page in paginator.pages %}
+              <p class="list-post-title"><a href="{{ page.permalink | safe }}">{{ page.title  }}</a></p>
+              <article class="list-post-container">
+                <div class="list-post">
+                  <summary class="post-summary">
+                    {{ page.summary | safe }}
+                  </summary>
+                  <div class="read-more">
+                    <a href="{{ page.permalink }}">Read more...</a>
+                    {{ macros::taglist(page=page) }}
+                  </div>
+                </div>
+              </article>
+            {% endfor %}
+            <div class="pagination">
+              {% if paginator.previous %}
+                <a class="previous" href="{{ paginator.previous }}">‹ Previous</a>
+              {% endif %}
+              {% if paginator.next %}
+                <a class="next" href="{{ paginator.next }}">Next ›</a>
+              {% endif %}
+            </div>
+            {% endblock content %}
+          </div>
+        </div>
+      </div>
+    <script src="js/scripts.js"></script>
+  </body>
+</html>
