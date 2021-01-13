@@ -12,4 +12,4 @@ jobs:
     - name: zbrox/zola-deploy-action
       uses: zbrox/zola-deploy-action@master
       env:
-        TOKEN: ${{ secrets.ZOLA_DEPLOY }}
+        TOKEN: ${{ secrets.TOKEN }}
