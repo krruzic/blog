@@ -9,9 +9,9 @@
   <body>
     <div id="content">
         <div id="sidebar">
-          <img src="/me_vertical_dark2.jpg" id="sidebar-photo"/>
+          <img src="/me_vertical_dark3.jpg" id="sidebar-photo"/>
           <div class="about-desc">
-            <p>I&#39;m Kristopher Ruzic, a software developer from Calgary. See more <a href="/about">about me</a></p>
+            <p>I&#39;m Kristopher Ruzic, a software developer from Calgary. See more <a href="/about">about me.</a></p>
             <a href="/resume.pdf">Resume</a>
           </div>
         </div>
@@ -23,21 +23,23 @@
               {# <li><a href="/archive">archive</a></li> #}
             </ul>
           </div>
-          <div class="page-content scroll-gradient">
+          <div class="page-content">
             {% block content %}
-            {% for page in paginator.pages %}
-              <p class="list-post-title"><a href="{{ page.permalink | safe }}">{{ page.title  }}</a></p>
-              <article class="list-post-container">
-                <div class="list-post">
-                  <summary class="post-summary">
-                    {{ page.summary | safe }}
-                  </summary>
-                  <div class="read-more">
-                    <a href="{{ page.permalink }}">Read more...</a>
-                    {{ macros::taglist(page=page) }}
+              {% for page in paginator.pages %}
+                {% if page.title != "About Kristopher Ruzic" %}
+                <p class="list-post-title"><a href="{{ page.permalink | safe }}">{{ page.title  }}</a></p>
+                <article class="list-post-container">
+                  <div class="list-post">
+                    <summary class="post-summary">
+                      {{ page.summary | safe }}
+                    </summary>
+                    <div class="read-more">
+                      <a href="{{ page.permalink }}">Read more...</a>
+                      {{ macros::taglist(page=page) }}
+                    </div>
                   </div>
-                </div>
-              </article>
+                </article>
+                {% endif %}
             {% endfor %}
             <div class="pagination">
               {% if paginator.previous %}

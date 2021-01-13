@@ -7,6 +7,7 @@ body {
   height: 100%;
   margin: 0;
   background: var(--base-bg-color);
+  color: var(--base-text-color);
 }
 h1 {
   font-size: 2rem;
@@ -34,6 +35,9 @@ pre {
   overflow: auto;
   border: 1px solid #dddddd22;
   filter: brightness(120%);
+}
+ul {
+  list-style-type: none;
 }
 .main-header {
   display: flex;
@@ -87,6 +91,7 @@ pre {
   border-top: 1px solid white;
   border-right: 1px solid white;
   margin: 2rem;
+  margin-bottom: 0;
 }
 
 .blognav {
@@ -173,4 +178,23 @@ pre {
 .post-meta {
   border-bottom: 4px dashed white;
   padding-bottom: 1rem;
+}
+
+.tag-list::before {
+  content: "::";
+  color: var(--base-text-color);
+  filter: brightness(70%);
+}
+
+.about-container {
+  padding-top: 10vh;
+}
+.about-header {
+  margin-top: 0;
+  color: var(--base-text-color);
+}
+.about-content {
+  float: right;
+  width: 45%;
+  padding: 0 2rem;
 }

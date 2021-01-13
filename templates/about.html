@@ -1,0 +1,12 @@
+{% extends "index.html" %}
+{% block content %}
+  <article class="about-container">
+    <div class="about-me">
+      <img src="/notredame.jpg" width="50%">
+      <div class="about-content">
+        <h2 class="about-header">{{ page.title }}</h2>
+        {{ page.content | safe }}
+      </div>
+    </div>
+  </article>
+{% endblock content %}

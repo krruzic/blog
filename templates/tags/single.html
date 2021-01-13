@@ -1,9 +1,6 @@
 {% extends "index.html" %}
 {% block content %}
-  <h1>tag: #{{ term.name }} ({{ term.pages | length }} post{{ term.pages | length | pluralize }})</h1>
-  <a href="/tags">
-    Show all tags
-  </a>
+  <h4>#{{ term.name }} ({{ term.pages | length }} post{{ term.pages | length | pluralize }})</h4>
 
   <ul>
   {%- for page in term.pages %}
@@ -18,4 +15,7 @@
     </li>
   {% endfor -%}
   </ul>
+  <a href="/tags">
+    Show all tags
+  </a>
 {% endblock content %}
