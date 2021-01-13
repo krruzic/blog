@@ -1,4 +1,9 @@
 {% extends "index.html" %}
+{% block headerlist %}
+  <li class="go-back-item"><a href="..">go back</a></li>
+{% endblock headerlist %}
+
+
 {% block content %}
   <h4>#{{ term.name }} ({{ term.pages | length }} post{{ term.pages | length | pluralize }})</h4>
 

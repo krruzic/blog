@@ -102,12 +102,28 @@ ul {
   min-width: 100%;
   list-style: none;
 }
+.blognav li:hover {
+  opacity: 0.7;
+}
 .blognav li:not(:last-of-type) {
   margin-right: 0.5rem;
   margin-bottom: 1vh;
   color: var(--base-text-color);
 }
-
+.blognav li::before {
+  content: "::";
+  margin-right: 0.5rem;
+}
+.blognav li::before:not(:first-of-type) {
+  content: "::";
+  margin-left: 0.5rem;
+}
+.blognav li a {
+  text-decoration: none;
+}
+.go-back-item::before {
+  content: "«" !important;
+}
 .page-content {
   flex: 1;
   overflow: auto;
@@ -194,7 +210,19 @@ ul {
   color: var(--base-text-color);
 }
 .about-content {
-  float: right;
+  float: left;
   width: 45%;
   padding: 0 2rem;
+}
+.about-content p {
+  line-height: 1.5;
+  background: var(--base-text-color);
+  color: var(--base-bg-color);
+  display: inline;
+}
+.about-content p:after {
+  content: " ";
+  display: block;
+  margin-bottom: 1em;
+  white-space: pre-line;
 }
