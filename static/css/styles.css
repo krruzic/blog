@@ -3,6 +3,15 @@
   --base-bg-color: #010101;
   --base-accent-color: #c62828;
 }
+@font-face {
+  font-family: "Space Mono";
+  src: url("/SpaceMono-Regular.ttf");
+}
+@font-face {
+  font-family: "Space Mono Bold";
+  src: url("/SpaceMono-Bold.ttf");
+}
+
 body {
   height: 100%;
   margin: 0;
@@ -12,7 +21,12 @@ body {
 h1 {
   font-size: 2rem;
   color: var(--base-text-color);
-  margin-bottom: 0.25rem;
+  font-family: "Space Mono Bold";
+}
+h1,
+h4 {
+  margin: 0.5vh 0;
+  font-family: "Space Mono Bold";
 }
 a {
   color: var(--base-text-color);
@@ -38,6 +52,7 @@ pre {
 }
 ul {
   list-style-type: none;
+  font-family: "Space Mono";
 }
 .main-header {
   display: flex;
@@ -67,11 +82,10 @@ ul {
 #sidebar {
   flex: 1;
   display: inline-flex;
-  min-width: 20vw;
   flex-flow: column nowrap;
   align-items: baseline;
   border-right: 1px solid white;
-  padding: 2rem 1rem;
+  padding: 2vh 1vw;
 }
 #sidebar-photo {
   object-fit: cover;
@@ -86,15 +100,13 @@ ul {
   margin-bottom: 0.5rem;
 }
 #maincontent {
-  flex: 4;
+  flex: 5;
   display: flex;
   flex-direction: column;
-  padding: 0 2rem;
   border-top: 1px solid white;
   border-right: 1px solid white;
-  margin: 2rem;
+  margin: 2vh 1vw;
   margin-bottom: 0;
-  max-width: 70vw;
 }
 
 .blognav {
@@ -130,6 +142,7 @@ ul {
 .page-content {
   flex: 1;
   overflow: auto;
+  padding: 2vh 5vw;
 }
 .list-post-container,
 .post-container {
@@ -140,10 +153,11 @@ ul {
 .list-post-container {
   border-bottom: 1px solid white;
   border-left: 1px solid white;
-  margin-top: 0.25rem;
+  margin-top: 1vh;
   margin-left: 0;
   margin-right: 0;
-  width: 80%;
+  margin-bottom: 2vh;
+  max-width: 100ch;
 }
 .list-post {
   margin-left: 0.5rem;
@@ -161,13 +175,14 @@ ul {
 .list-post-title,
 .post-title {
   font-size: 1.5rem;
-  font-weight: bold;
   margin-top: 0.4rem;
   line-height: 1.2;
   margin-bottom: 0;
   max-width: 60ch;
+  font-family: "Space Mono Bold";
 }
 .post-summary {
+  font-family: "Space Mono";
 }
 .post-summary p {
   margin-top: 0.3rem;
@@ -188,8 +203,13 @@ ul {
 .post-tag:hover {
   opacity: 0.7;
 }
+.post-content {
+  font-family: "Space Mono";
+  font-size: 1.1rem;
+}
 .post-content h1 {
-  font-size: 1.15rem;
+  font-size: 1.25rem;
+  font-family: "Space Mono Bold";
 }
 
 .post-meta {
@@ -202,7 +222,9 @@ ul {
   color: var(--base-text-color);
   filter: brightness(70%);
 }
-
+.tag-content {
+  display: flex;
+}
 .about-container {
 }
 .about-header {
@@ -213,12 +235,15 @@ ul {
   float: left;
   width: 45%;
   padding: 0 2rem;
+  font-family: "Space Mono";
 }
 .about-content p {
   line-height: 1.5;
   background: var(--base-text-color);
   color: var(--base-bg-color);
   display: inline;
+  box-shadow: 4px 0px 0px var(--base-text-color), -4px 0px 0px var(--base-text-color);
+  box-decoration-break: clone;
 }
 .about-content p:after {
   content: " ";
@@ -232,13 +257,20 @@ ul {
     display: none;
   }
   #maincontent {
-    padding: 0 1rem;
+    padding: 0 1vw;
     max-width: 80vw;
     margin: 1.5rem 0.5rem;
   }
   .list-post-title,
   .post-title {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
+    margin-bottom: 0;
+  }
+  .post-content {
+    font-size: 0.85rem;
+  }
+  .page-content {
+    padding: 0;
   }
 }
 /* ipad */
@@ -246,5 +278,8 @@ ul {
   .about-content {
     padding: 0;
     width: 95%;
+  }
+  .tag-content img {
+    display: none;
   }
 }

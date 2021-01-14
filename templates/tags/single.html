@@ -6,7 +6,6 @@
 
 {% block content %}
   <h4>#{{ term.name }} ({{ term.pages | length }} post{{ term.pages | length | pluralize }})</h4>
-
   <ul>
   {%- for page in term.pages %}
     {%- if page.draft %}
