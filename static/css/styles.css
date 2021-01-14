@@ -57,7 +57,7 @@ ul {
 .main-header {
   display: flex;
   flex-direction: column;
-  height: 8vh;
+  height: 6rem;
 }
 #content {
   display: flex;
@@ -258,7 +258,7 @@ ul {
 /* mobile */
 @media only screen and (max-width: 600px) {
   .main-header {
-    height: 24vh;
+    height: 9rem;
   }
   #sidebar {
     display: none;
