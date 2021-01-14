@@ -226,15 +226,20 @@ ul {
 .tag-content {
   display: flex;
 }
+.tag-content img {
+  height: 50vh;
+}
 .about-container {
+  display: flex;
+}
+.about-container img {
+  height: 30vh;
 }
 .about-header {
   margin-top: 0;
   color: var(--base-text-color);
 }
 .about-content {
-  float: left;
-  width: 45%;
   padding: 0 2rem;
   font-family: "Space Mono";
 }
@@ -253,7 +258,7 @@ ul {
   white-space: pre-line;
 }
 /* mobile */
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 670px) {
   #sidebar {
     display: none;
   }
@@ -272,6 +277,9 @@ ul {
   .page-content {
     padding: 0;
   }
+  .about-container img {
+    display: none;
+  }
 }
 /* ipad */
 @media only screen and (max-width: 768px) {
@@ -279,7 +287,7 @@ ul {
     padding: 0;
     width: 95%;
   }
-  .tag-content img {
+  .about-container img {
     display: none;
   }
 }
