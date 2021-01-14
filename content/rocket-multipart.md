@@ -1,5 +1,5 @@
 +++
-title = "Rocket.rs and Multipart forms"
+title = "Rocket.rs and Multipart Forms"
 date = 2019-12-27
 draft = false
 type = "post"
