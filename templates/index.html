@@ -12,7 +12,7 @@
           <img src="/me_vertical_dark.jpg" id="sidebar-photo"/>
           <div class="about-desc">
             <p>I&#39;m Kristopher Ruzic, a software developer from Calgary. See more <a href="/about">about me.</a></p>
-            <a href="/resume.pdf">Resume</a>
+            <a href="/resume.pdf">Download My Resume</a>
           </div>
         </div>
         <div id="maincontent">
@@ -26,6 +26,7 @@
           </div>
           <div class="page-content">
             {% block content %}
+              </div>
               {% for page in paginator.pages %}
                 {% if page.title != "About Kristopher Ruzic" %}
                 <article class="list-post-container">
