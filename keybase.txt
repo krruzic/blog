@@ -1,0 +1,88 @@
+==================================================================
+https://keybase.io/krruzic
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://krruzic.xyz
+  * I am krruzic (https://keybase.io/krruzic) on keybase.
+  * I have a public key with fingerprint E60F 632F D6BF E5F4 6D6E  695D 96DD 72AA A586 82F5
+
+To do so, I am signing this object:
+
+{
+  "body": {
+    "key": {
+      "eldest_kid": "012011580e749af528ef2aa44cd5a10a917b49a0689ddd0ab306e3b208aab42bfd270a",
+      "fingerprint": "e60f632fd6bfe5f46d6e695d96dd72aaa58682f5",
+      "host": "keybase.io",
+      "key_id": "96dd72aaa58682f5",
+      "kid": "0101939c77ac1e6d3976de59faaa63356ddb2d56365adfe499c15a0955c3a72ef8ba0a",
+      "uid": "efb864b44358b77973e9d39131ae4419",
+      "username": "krruzic"
+    },
+    "merkle_root": {
+      "ctime": 1610593919,
+      "hash_meta": "2edf3e39fed23899e02a2401d7096f043a0a877a2b74e9cfb9aacf17ae244afd",
+      "seqno": 18738235
+    },
+    "revoke": {
+      "sig_ids": [
+        "efdf84fe6fc10eaef165b737b49ca1c7cf818886d912bc0e000c25270e4ff1080f"
+      ]
+    },
+    "service": {
+      "hostname": "krruzic.xyz",
+      "protocol": "https:"
+    },
+    "type": "web_service_binding",
+    "version": 1
+  },
+  "ctime": 1610593920,
+  "expire_in": 157680000,
+  "prev": "092f1ede7b6bd92a2ebad01734ac2cde255847089c7f12a6f11be7421460e0b6",
+  "seqno": 40,
+  "tag": "signature"
+}
+
+which yields the signature:
+
+-----BEGIN PGP MESSAGE-----
+Version: Keybase OpenPGP v2.1.13
+Comment: https://keybase.io/crypto
+
+yMP5AnicbVN/bBRFGL0KLbQUEamAEoOuMRCoMDO7O7tTEEUUS4PYFKQWCufszkzv
+0nJ77F6vP+CQIjX8MgRISUHAH4AQAgoVUUBRKBZoq6KCmgYsrZrQSAoYwEYsONtI
+jMa/NrPzvve9975vjvfvFUhLWn/e3bX91SXXk5qOlZYGgrcPLF6gWA6rULIWKMW8
+58NLGPdiweIwU7IUABGAUDcBNzRChY5MLhClmmYznUJACTQseQGwSRhjgFoqwFy1
+EDAptTRkCYYMQJVMRYQjRdyNuuFITNJyDARWkWDYElwXGmaYY6IzghkzJD/VTWwi
+ocvCkOP5FVKcRT0+JuzIf/IQ7JH3P/g7ugEkKrENg9qQY6YSAzOuEyGxWFV1WWch
+pmMV65QJrhFiQ50Couu2Sg3EhWnRHt2lPXRcWCbWLE1TddMyDGKonEhOqELKNQ0S
+H+hxN0LncV+r65ZWhm0lkanM425xCQ+6jhPzs7VjYR8BMQS6lAeJ9Ee9UHAej1FZ
+iDgTKleJ4AypJiEcIIo0AJkBCBZAU6UmU1pClqFxYguLUGoLaFCONI0KJmV4fH7E
+kR1MQzWRqksJLo87xdzv7oWLZGyekjVbGmLC1ATHwoaAUy4g1i1D9YdpU2gbtjCh
+aZqYEYgsG3AAgI10OUuuCQGBCYQyJ+F3c+Nhu4fcn9O//Y8pr6iUiqKuE3Nsp0Re
+hGKxqJfl5xKriPrIMm4F/+YIWuEIk0siK+Lc9cJORLqQyP9EhkCmwsujYZcHwz5C
+N7ApxQG/D4/7kydIQM64YWGLEZkftygD0FA1aiObcaTrpmYAU+6GgIhiAaEllxtB
+DUubFv4nQ02SxmiR5JTBRWis1OVK4tjRwt6BpLRASvJd/usJpKXec+dNjVozoDsj
+N6oO62hekZKMb275o7PXd9X179+anV8wYtBBp+GxzpbOhzKqlc9bW9MHpP60tntx
+OkrsX9W34MbFIYPa1i0MNi3J6dU2acojXfdn9kkJVV8Y3zIxv1/RnpTkUQV4y/Rt
+6tG3sjcFHmxfuLY8lrlsR9Mn5PKj1ypPpbkTuq4Oox/uJWr3WFQZ+7HxwuaNx3NW
+z8konFZzKT3urMjJfo807Ly3dsiVq7Pqao/H6wYO/rju0i/VT+xMj5QVrE2fWJ89
+NXd0/1+/hYX7hofmi4e/v7b39aqpte1YaWk2W/GXi7pw37IALcz64mzX5GHr+KC4
+03D3G4lnBmePeLGu82m9/srpttVDE90v19rhjm19ppc5TFntXZqJ9izLmdJcM9fb
+/xlYMO6r8jW7Z1TN31i1ubB/vDI/UX8KDjkHzq0/kVrddW3/nMk3Ot5Gu8qf++3W
+jeTzhwPvJs82f8hveyB3980+eurIxoyN0ye00CNjRtUYMxqjkw6sOwidDamH8l5r
+zPtma8Wi0aXLKz9q3tKem928op6dd6tWPtk0uOTxfVtnXn+heVnbQ/3yRvb+oGbx
+p0NPewNXtm66WX92ZN9jt78O3epYuu9ZI2/VhCPXx28/N8043ND489Rp1ZsPNb10
+0rmYnbfolaW/Xw7NNZ+fNfDP9uEp9+GC/K6kgje1uqfe2bXpzLg1J1oWntk2q2jK
+2A07lg89+Rc5FwP1
+=bfad
+-----END PGP MESSAGE-----
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/krruzic
+
+==================================================================

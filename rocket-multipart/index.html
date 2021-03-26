@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+<link rel="stylesheet" href="/css/styles.css" />
+<link rel="icon" type="image/png" href="/favicon.png"/>
+<title>My Thoughts Go Here · Home</title>
+
+  </head>
+  <body>
+    <div id="content">
+        <div id="sidebar">
+          <img src="/me_vertical_dark.jpg" alt="Kristopher Ruzic" id="sidebar-photo"/>
+          <div class="about-desc">
+            <p>I&#39;m Kristopher Ruzic, a software developer from Calgary. See more <a href="/about">about me.</a></p>
+            <a href="/resume.pdf">Download My Resume</a>
+          </div>
+          <a href="https://rms-support-letter.github.io/"><img id="sidebar-badge" src="https://raw.githubusercontent.com/rms-support-letter/rms-support-letter.github.io/master/assets/badge-64-w-border.png" alt="I stand with RMS" /></a>
+        </div>
+        <div id="maincontent">
+          <div class="main-header">
+            <h1>My Thoughts Go Here</h1>
+            <ul class="blognav">
+            
+  <li class="go-back-item"><a href="..">go back</a></li>
+
+              <li><a href="/tags">tags</a></li>
+            </ul>
+          </div>
+          <div class="page-content">
+            
+  <article class="post-container">
+    <div class="post-meta">
+      <p class="post-title"><a href="https://krruzic.xyz/rocket-multipart/">Rocket.rs and Multipart Forms</a></p>
+      2019-12-27 
+   |
+    
+      <a href="https:&#x2F;&#x2F;krruzic.xyz&#x2F;tags&#x2F;rust&#x2F;" class="post-tag">#rust</a>
+    
+      <a href="https:&#x2F;&#x2F;krruzic.xyz&#x2F;tags&#x2F;tutorial&#x2F;" class="post-tag">#tutorial</a>
+    
+      <a href="https:&#x2F;&#x2F;krruzic.xyz&#x2F;tags&#x2F;backend&#x2F;" class="post-tag">#backend</a>
+    
+  
+
+    </div>
+    <div class="post">
+      <div class="post-content"><p>Recently I've been working on a rust web service written using Rocket and Diesel. A big issue I came across was handling
+muitpart forms with <code>content-type: multipart/form-data</code>. Rocket has yet to add official support for this, but you can
+hack it in fairly easily thanks to the Request Guard system.</p>
+<span id="continue-reading"></span><h1 id="setup">Setup</h1>
+<p>Create a new binary project with cargo: <code>cargo init multipart_demo</code> then add dependencies to your cargo.toml using
+<a href="https://github.com/killercup/cargo-edit">cargo-edit</a></p>
+<pre style="background-color:#191919;">
+<code class="language-bash" data-lang="bash"><span style="color:#cccccc;">cargo install cargo-edit
+cargo add rocket
+cargo add rocket-multipart-form-data
+cargo add serde_json
+</span><span style="background-color:#171717;color:#616161;"># next you have to add serde manually to the cargo file
+</span><span style="color:#cccccc;">echo </span><span style="color:#ffd700;">&#39;serde = { version = &quot;*&quot;, features = [&quot;derive&quot;]}&#39; </span><span style="color:#ffffff;">&gt;&gt;</span><span style="color:#cccccc;"> Cargo.toml
+</span></code></pre><h4 id="dependencies-explained">Dependencies explained</h4>
+<p><a href="https://crates.io/crates/rocket">Rocket</a>: should be obvious if you're here, rocket is the webserver powering the whole
+app. It handles incoming requests and routes them to the proper page and does everything in between.</p>
+<p><a href="https://crates.io/crates/rocket-multipart-form-data">Rocket-Multipart-Form-Data</a>: this is where the magic happens. This
+package handles the parsing of the multipart form.</p>
+<p><a href="https://crates.io/crates/serde">Serde</a>: JSON serialization/deserialization.</p>
+<h1 id="getting-started">Getting started</h1>
+<p>Now that we have our environment set up, it's time to start building something. To keep things simple, let's make a JSON
+api endpoint for creating new user profiles. This endpoint should take two fields, <code>avatar</code> an image file to use as
+their profile picture, and <code>data</code> a JSON object containing their name and age.</p>
+<p>To do this, create a new file in the <code>multipart_demo/src</code> directory called <code>middleware.rs</code> this is where we will
+intercept the request and use the multipart parser to validate the submission. Instead of just bolting on support
+however, let's integrate it with Rocket's powerful
+<a href="https://rocket.rs/v0.4/guide/requests/#request-guards">request guard feature</a>.</p>
+<p>First we need to set up the Error type in case something goes wrong in parsing, the <code>User</code> struct that we deserialize
+the JSON to, as well as the <code>NewUser</code> struct representing the passed in form.</p>
+<pre style="background-color:#191919;">
+<code class="language-rust" data-lang="rust"><span style="background-color:#171717;color:#616161;">// our dependencies
+</span><span style="color:#ffffff;">use </span><span style="color:#cccccc;">rocket::data::{FromDataSimple, Outcome};
+</span><span style="color:#ffffff;">use </span><span style="color:#cccccc;">rocket::http::Status;
+</span><span style="color:#ffffff;">use </span><span style="color:#cccccc;">rocket::{Data, Outcome::</span><span style="color:#ffffff;">*</span><span style="color:#cccccc;">, Request};
+</span><span style="color:#ffffff;">use </span><span style="color:#cccccc;">rocket_multipart_form_data::{
+    mime, MultipartFormData, MultipartFormDataField,
+    MultipartFormDataOptions, RawField, TextField,
+};
+</span><span style="color:#ffffff;">use </span><span style="color:#cccccc;">serde::{Deserialize, Serialize};
+
+</span><span style="background-color:#171717;color:#616161;">// first we need to create a custom error type, as the FromDataSimple guard
+// needs to return one
+</span><span style="color:#cccccc;">#[derive(Debug, Clone)]
+</span><span style="color:#80d500;">pub struct </span><span style="color:#cccccc;">MultipartError {
+    </span><span style="color:#80d500;">pub </span><span style="color:#cccccc;">reason: String,
+}
+</span><span style="color:#80d500;">impl </span><span style="color:#cccccc;">MultipartError {
+    </span><span style="color:#80d500;">fn </span><span style="color:#ffffff;">new</span><span style="color:#cccccc;">(</span><span style="font-style:italic;color:#8aa6c1;">reason</span><span style="color:#cccccc;">: String) -&gt; MultipartError {
+        MultipartError { reason }
+    }
+}
+</span><span style="color:#80d500;">impl </span><span style="color:#cccccc;">std::fmt::Display </span><span style="color:#ffffff;">for </span><span style="color:#cccccc;">MultipartError {
+    </span><span style="color:#80d500;">fn </span><span style="color:#ffffff;">fmt</span><span style="color:#cccccc;">(</span><span style="color:#ffffff;">&amp;</span><span style="font-style:italic;color:#8aa6c1;">self</span><span style="color:#cccccc;">, </span><span style="font-style:italic;color:#8aa6c1;">f</span><span style="color:#cccccc;">: </span><span style="color:#ffffff;">&amp;</span><span style="color:#80d500;">mut </span><span style="color:#cccccc;">std::fmt::Formatter) -&gt; std::fmt::Result {
+        write!(f, </span><span style="color:#ffd700;">&quot;</span><span style="color:#66ccff;">{}</span><span style="color:#ffd700;">&quot;</span><span style="color:#cccccc;">, self.reason)
+    }
+}
+
+</span><span style="background-color:#171717;color:#616161;">/// simple representation of a user
+</span><span style="color:#cccccc;">#[derive(Serialize, Deserialize)]
+</span><span style="color:#80d500;">pub struct </span><span style="color:#cccccc;">User {
+    </span><span style="color:#80d500;">pub </span><span style="color:#cccccc;">name: String,
+    </span><span style="color:#80d500;">pub </span><span style="color:#cccccc;">age: </span><span style="color:#80d500;">i32</span><span style="color:#cccccc;">,
+}
+
+</span><span style="background-color:#171717;color:#616161;">/// multipart form is loaded into this struct
+/// this is what&#39;s passed through to the route we&#39;ll create later
+</span><span style="color:#80d500;">pub struct </span><span style="color:#cccccc;">NewUser {
+    </span><span style="background-color:#171717;color:#616161;">/// the submitted image
+</span><span style="color:#cccccc;">    </span><span style="color:#80d500;">pub </span><span style="color:#cccccc;">avatar: </span><span style="color:#8aa6c1;">Vec</span><span style="color:#cccccc;">&lt;</span><span style="color:#80d500;">u8</span><span style="color:#cccccc;">&gt;,
+    </span><span style="background-color:#171717;color:#616161;">/// we&#39;ll deserialize the json into a User
+</span><span style="color:#cccccc;">    </span><span style="color:#80d500;">pub </span><span style="color:#cccccc;">user: User,
+}
+</span></code></pre><h1 id="request-guard-implementation">Request Guard Implementation</h1>
+<p>Now that we have the basic data structures we need for our app, let's create the parser. As mentioned above, we'll do
+this by implementing the Rocket <code>FromDataSimple</code> trait as a request guard. What this does is intercept a request BEFORE
+it reaches a route, and verifies / modifies / parses the data received. We take advantage of this to verify our
+multipart form ahead of time, to keep our routes clean and enable code reuse. Implement the trait below in
+<code>middleware.rs</code></p>
+<pre style="background-color:#191919;">
+<code class="language-rust" data-lang="rust"><span style="color:#80d500;">impl </span><span style="color:#cccccc;">FromDataSimple </span><span style="color:#ffffff;">for </span><span style="color:#cccccc;">NewUser {
+    </span><span style="color:#80d500;">type </span><span style="color:#cccccc;">Error </span><span style="color:#ffffff;">=</span><span style="color:#cccccc;"> MultipartError;
+
+    </span><span style="color:#80d500;">fn </span><span style="color:#ffffff;">from_data</span><span style="color:#cccccc;">(</span><span style="font-style:italic;color:#8aa6c1;">request</span><span style="color:#cccccc;">: </span><span style="color:#ffffff;">&amp;</span><span style="color:#cccccc;">Request, </span><span style="font-style:italic;color:#8aa6c1;">data</span><span style="color:#cccccc;">: Data) -&gt; Outcome&lt;</span><span style="color:#80d500;">Self</span><span style="color:#cccccc;">, </span><span style="color:#80d500;">Self::</span><span style="color:#cccccc;">Error&gt; {
+        </span><span style="color:#80d500;">let</span><span style="color:#cccccc;"> image_bytes;
+        </span><span style="color:#80d500;">let</span><span style="color:#cccccc;"> post_obj;
+        </span><span style="color:#80d500;">let mut</span><span style="color:#cccccc;"> options </span><span style="color:#ffffff;">= </span><span style="color:#cccccc;">MultipartFormDataOptions::new();
+
+        </span><span style="background-color:#171717;color:#616161;">// setup the multipart parser, this creates a parser
+</span><span style="color:#cccccc;">        </span><span style="background-color:#171717;color:#616161;">// that checks for two fields: an image of any mime type
+</span><span style="color:#cccccc;">        </span><span style="background-color:#171717;color:#616161;">// and a data field containining json representing a User
+</span><span style="color:#cccccc;">        options.allowed_fields.</span><span style="color:#8aa6c1;">push</span><span style="color:#cccccc;">(
+            MultipartFormDataField::raw(</span><span style="color:#ffd700;">&quot;avatar&quot;</span><span style="color:#cccccc;">)
+                .</span><span style="color:#8aa6c1;">size_limit</span><span style="color:#cccccc;">(</span><span style="color:#eddd5a;">8 </span><span style="color:#ffffff;">* </span><span style="color:#eddd5a;">1024 </span><span style="color:#ffffff;">* </span><span style="color:#eddd5a;">1024</span><span style="color:#cccccc;">) </span><span style="background-color:#171717;color:#616161;">// 8 MB
+</span><span style="color:#cccccc;">                .</span><span style="color:#8aa6c1;">content_type_by_string</span><span style="color:#cccccc;">(</span><span style="color:#8aa6c1;">Some</span><span style="color:#cccccc;">(mime::</span><span style="color:#66ccff;">IMAGE_STAR</span><span style="color:#cccccc;">))
+                .</span><span style="color:#8aa6c1;">unwrap</span><span style="color:#cccccc;">(),
+        );
+        options
+            .allowed_fields
+            .</span><span style="color:#8aa6c1;">push</span><span style="color:#cccccc;">(MultipartFormDataField::text(</span><span style="color:#ffd700;">&quot;data&quot;</span><span style="color:#cccccc;">).</span><span style="color:#8aa6c1;">content_type</span><span style="color:#cccccc;">(</span><span style="color:#8aa6c1;">Some</span><span style="color:#cccccc;">(mime::</span><span style="color:#66ccff;">STAR_STAR</span><span style="color:#cccccc;">)));
+
+        </span><span style="background-color:#171717;color:#616161;">// check if the content type is set properly
+</span><span style="color:#cccccc;">        </span><span style="color:#80d500;">let</span><span style="color:#cccccc;"> ct </span><span style="color:#ffffff;">= </span><span style="color:#80d500;">match</span><span style="color:#cccccc;"> request.</span><span style="color:#8aa6c1;">content_type</span><span style="color:#cccccc;">() {
+            </span><span style="color:#8aa6c1;">Some</span><span style="color:#cccccc;">(ct) </span><span style="color:#ffffff;">=&gt;</span><span style="color:#cccccc;"> ct,
+            </span><span style="color:#ffffff;">_ =&gt; </span><span style="color:#cccccc;">{
+                </span><span style="color:#80d500;">return</span><span style="color:#cccccc;"> Failure((
+                    Status::BadRequest,
+                    MultipartError::new(format!(
+                        </span><span style="color:#ffd700;">&quot;Incorrect contentType, should be &#39;multipart/form-data&quot;
+                    </span><span style="color:#cccccc;">)),
+                ))
+            }
+        };
+
+        </span><span style="background-color:#171717;color:#616161;">// do the form parsing and return on error
+</span><span style="color:#cccccc;">        </span><span style="color:#80d500;">let</span><span style="color:#cccccc;"> multipart_form </span><span style="color:#ffffff;">= </span><span style="color:#80d500;">match </span><span style="color:#cccccc;">MultipartFormData::parse(</span><span style="color:#ffffff;">&amp;</span><span style="color:#cccccc;">ct, data, options) {
+            </span><span style="color:#8aa6c1;">Ok</span><span style="color:#cccccc;">(m) </span><span style="color:#ffffff;">=&gt;</span><span style="color:#cccccc;"> m,
+            </span><span style="color:#8aa6c1;">Err</span><span style="color:#cccccc;">(e) </span><span style="color:#ffffff;">=&gt; </span><span style="color:#cccccc;">{
+                </span><span style="color:#80d500;">return</span><span style="color:#cccccc;"> Failure((Status::BadRequest, MultipartError::new(format!(</span><span style="color:#ffd700;">&quot;</span><span style="color:#66ccff;">{:?}</span><span style="color:#ffd700;">&quot;</span><span style="color:#cccccc;">, e))))
+            }
+        };
+        </span><span style="background-color:#171717;color:#616161;">// check if the form has the json field `data`
+</span><span style="color:#cccccc;">        </span><span style="color:#80d500;">let</span><span style="color:#cccccc;"> post_json_part </span><span style="color:#ffffff;">= </span><span style="color:#80d500;">match</span><span style="color:#cccccc;"> multipart_form.texts.</span><span style="color:#8aa6c1;">get</span><span style="color:#cccccc;">(</span><span style="color:#ffd700;">&quot;data&quot;</span><span style="color:#cccccc;">) {
+            </span><span style="color:#8aa6c1;">Some</span><span style="color:#cccccc;">(post_json_part) </span><span style="color:#ffffff;">=&gt;</span><span style="color:#cccccc;"> post_json_part,
+            </span><span style="color:#ffffff;">_ =&gt; </span><span style="color:#cccccc;">{
+                </span><span style="color:#80d500;">return</span><span style="color:#cccccc;"> Failure((
+                    Status::BadRequest,
+                    MultipartError::new(format!(</span><span style="color:#ffd700;">&quot;Missing field &#39;data&#39;&quot;</span><span style="color:#cccccc;">)),
+                ))
+            }
+        };
+        </span><span style="background-color:#171717;color:#616161;">// check if the form has the avatar image
+</span><span style="color:#cccccc;">        </span><span style="color:#80d500;">let</span><span style="color:#cccccc;"> image_part: </span><span style="color:#ffffff;">&amp;</span><span style="color:#cccccc;">RawField </span><span style="color:#ffffff;">= </span><span style="color:#80d500;">match</span><span style="color:#cccccc;"> multipart_form.raw.</span><span style="color:#8aa6c1;">get</span><span style="color:#cccccc;">(</span><span style="color:#ffd700;">&quot;avatar&quot;</span><span style="color:#cccccc;">) {
+            </span><span style="color:#8aa6c1;">Some</span><span style="color:#cccccc;">(image_part) </span><span style="color:#ffffff;">=&gt;</span><span style="color:#cccccc;"> image_part,
+            </span><span style="color:#ffffff;">_ =&gt; </span><span style="color:#cccccc;">{
+                </span><span style="color:#80d500;">return</span><span style="color:#cccccc;"> Failure((
+                    Status::BadRequest,
+                    MultipartError::new(format!(</span><span style="color:#ffd700;">&quot;Missing field &#39;avatar&#39;&quot;</span><span style="color:#cccccc;">)),
+                ))
+            }
+        };
+        </span><span style="background-color:#171717;color:#616161;">// verify only the data we want is being passed, one text field and one binary
+</span><span style="color:#cccccc;">        </span><span style="color:#80d500;">match</span><span style="color:#cccccc;"> post_json_part {
+            TextField::Single(text) </span><span style="color:#ffffff;">=&gt; </span><span style="color:#cccccc;">{
+                </span><span style="color:#80d500;">let</span><span style="color:#cccccc;"> json_string </span><span style="color:#ffffff;">= &amp;</span><span style="color:#cccccc;">text.text.</span><span style="color:#8aa6c1;">replace</span><span style="color:#cccccc;">(</span><span style="color:#ffd700;">&#39;</span><span style="font-weight:bold;color:#ff2837;">\&#39;</span><span style="color:#ffd700;">&#39;</span><span style="color:#cccccc;">, </span><span style="color:#ffd700;">&quot;</span><span style="font-weight:bold;color:#ff2837;">\&quot;</span><span style="color:#ffd700;">&quot;</span><span style="color:#cccccc;">);
+                post_obj </span><span style="color:#ffffff;">= </span><span style="color:#80d500;">match </span><span style="color:#cccccc;">serde_json::from_str::&lt;User&gt;(json_string) {
+                    </span><span style="color:#8aa6c1;">Ok</span><span style="color:#cccccc;">(insert) </span><span style="color:#ffffff;">=&gt;</span><span style="color:#cccccc;"> insert,
+                    </span><span style="color:#8aa6c1;">Err</span><span style="color:#cccccc;">(e) </span><span style="color:#ffffff;">=&gt; </span><span style="color:#cccccc;">{
+                        </span><span style="color:#80d500;">return</span><span style="color:#cccccc;"> Failure((
+                            Status::BadRequest,
+                            MultipartError::new(format!(</span><span style="color:#ffd700;">&quot;</span><span style="color:#66ccff;">{:?}</span><span style="color:#ffd700;">&quot;</span><span style="color:#cccccc;">, e)),
+                        ))
+                    }
+                };
+            }
+            TextField::Multiple(_text) </span><span style="color:#ffffff;">=&gt; </span><span style="color:#cccccc;">{
+                </span><span style="color:#80d500;">return</span><span style="color:#cccccc;"> Failure((
+                    Status::BadRequest,
+                    MultipartError::new(format!(</span><span style="color:#ffd700;">&quot;Extra text fields supplied&quot;</span><span style="color:#cccccc;">)),
+                ))
+            }
+        };
+        </span><span style="color:#80d500;">match</span><span style="color:#cccccc;"> image_part {
+            RawField::Single(raw) </span><span style="color:#ffffff;">=&gt; </span><span style="color:#cccccc;">{
+                image_bytes </span><span style="color:#ffffff;">=</span><span style="color:#cccccc;"> raw.raw.</span><span style="color:#8aa6c1;">clone</span><span style="color:#cccccc;">();
+            }
+            RawField::Multiple(_raw) </span><span style="color:#ffffff;">=&gt; </span><span style="color:#cccccc;">{
+                </span><span style="color:#80d500;">return</span><span style="color:#cccccc;"> Failure((
+                    Status::BadRequest,
+                    MultipartError::new(format!(</span><span style="color:#ffd700;">&quot;Extra image fields supplied&quot;</span><span style="color:#cccccc;">)),
+                ))
+            }
+        };
+        Success(NewUser {
+            user: post_obj,
+            avatar: image_bytes,
+        })
+    }
+}
+</span></code></pre>
+<p>This is a lot of code, but it's actually fairly simple. All we do is verify the various parts of the form data, and
+return a relevant error message if something goes wrong. If you were verifying a more complex request, you'd just need
+to add additional match statements for each field supplied once.</p>
+<h1 id="finishing-up">Finishing Up</h1>
+<p>Finally we can implement a route that takes in a <code>NewUser</code> multipart form! Open up <code>src/main.rs</code> and replace its
+contents with the below code:</p>
+<pre style="background-color:#191919;">
+<code class="language-rust" data-lang="rust"><span style="color:#cccccc;">#![feature(proc_macro_hygiene, decl_macro)]
+#[macro_use]
+</span><span style="color:#ffffff;">extern crate</span><span style="color:#cccccc;"> serde;
+#[macro_use]
+</span><span style="color:#ffffff;">extern crate</span><span style="color:#cccccc;"> rocket;
+</span><span style="color:#ffffff;">extern crate</span><span style="color:#cccccc;"> rocket_multipart_form_data;
+
+</span><span style="color:#80d500;">mod </span><span style="color:#cccccc;">middleware;
+</span><span style="color:#ffffff;">use crate</span><span style="color:#cccccc;">::middleware::MultipartError;
+</span><span style="color:#ffffff;">use crate</span><span style="color:#cccccc;">::middleware::NewUser;
+
+</span><span style="color:#80d500;">type </span><span style="color:#cccccc;">Result</span><span style="color:#ffffff;">&lt;</span><span style="color:#cccccc;">T</span><span style="color:#ffffff;">&gt; = </span><span style="color:#cccccc;">std::result::Result&lt;T, MultipartError&gt;;
+
+</span><span style="background-color:#171717;color:#616161;">// create a route called create_user that expects a NewUser or an error.
+// If the post was successful, print off the user&#39;s information, otherwise
+// print off the error message.
+</span><span style="color:#cccccc;">#[post(</span><span style="color:#ffd700;">&quot;/create_user&quot;</span><span style="color:#cccccc;">, data </span><span style="color:#ffffff;">= </span><span style="color:#ffd700;">&quot;&lt;multipart&gt;&quot;</span><span style="color:#cccccc;">)]
+</span><span style="color:#80d500;">fn </span><span style="color:#ffffff;">new_user</span><span style="color:#cccccc;">(</span><span style="font-style:italic;color:#8aa6c1;">multipart</span><span style="color:#cccccc;">: </span><span style="color:#8aa6c1;">Result</span><span style="color:#cccccc;">&lt;NewUser&gt;) -&gt; String {
+    </span><span style="color:#80d500;">match</span><span style="color:#cccccc;"> multipart {
+        </span><span style="color:#8aa6c1;">Ok</span><span style="color:#cccccc;">(m) </span><span style="color:#ffffff;">=&gt; </span><span style="color:#cccccc;">format!(</span><span style="color:#ffd700;">&quot;Hello, </span><span style="color:#66ccff;">{}</span><span style="color:#ffd700;"> year old named </span><span style="color:#66ccff;">{}</span><span style="color:#ffd700;">!&quot;</span><span style="color:#cccccc;">, m.user.age, m.user.name),
+        </span><span style="color:#8aa6c1;">Err</span><span style="color:#cccccc;">(e) </span><span style="color:#ffffff;">=&gt; </span><span style="color:#cccccc;">format!(</span><span style="color:#ffd700;">&quot;Error: </span><span style="color:#66ccff;">{}</span><span style="color:#ffd700;">&quot;</span><span style="color:#cccccc;">, e.reason),
+    }
+}
+
+</span><span style="color:#80d500;">fn </span><span style="color:#ffffff;">main</span><span style="color:#cccccc;">() {
+    </span><span style="background-color:#171717;color:#616161;">// this launches the webserver with the above route mounted on /.
+</span><span style="color:#cccccc;">    </span><span style="background-color:#171717;color:#616161;">// To access it go to localhost:8000/create_user once launched
+</span><span style="color:#cccccc;">    rocket::ignite().</span><span style="color:#8aa6c1;">mount</span><span style="color:#cccccc;">(</span><span style="color:#ffd700;">&quot;/&quot;</span><span style="color:#cccccc;">, routes![new_user]).</span><span style="color:#8aa6c1;">launch</span><span style="color:#cccccc;">();
+}
+</span></code></pre><h1 id="testing-our-code">Testing our code</h1>
+<p>See how easy that was? We now have an error-proof route that takes in a multipart form, with no messy code. Since this
+is a simple tutorial, I won't show how to make a frontend where you can submit / view / manage users, instead we can
+test out this code with good old <code>curl</code>. First launch the server with <code>cargo run</code>. You should see some output showing
+where the route is mounted and how to access it. By default it should be <code>localhost:8000/create_user</code>. If for some
+reason its different, just replace the references in the curl command. You'll also want to replace <code>demo.png</code> with some
+png file on your system.</p>
+<pre style="background-color:#191919;">
+<code class="language-bash" data-lang="bash"><span style="color:#cccccc;">curl</span><span style="font-style:italic;color:#8aa6c1;"> -X</span><span style="color:#cccccc;"> POST </span><span style="color:#ffd700;">&quot;localhost:8000/create_user&quot;</span><span style="font-style:italic;color:#8aa6c1;"> -H  </span><span style="color:#ffd700;">&quot;accept: */*&quot;</span><span style="font-style:italic;color:#8aa6c1;"> -H  </span><span style="color:#cccccc;">\
+</span><span style="color:#ffd700;">&quot;Content-Type: multipart/form-data&quot; </span><span style="color:#cccccc;">\
+</span><span style="font-style:italic;color:#8aa6c1;">-F</span><span style="color:#cccccc;"> data=</span><span style="color:#ffd700;">&quot;{&#39;name&#39;: &#39;kristopher&#39;, &#39;age&#39;: 25}&quot;</span><span style="font-style:italic;color:#8aa6c1;"> -F </span><span style="color:#ffd700;">&quot;avatar=@demo.png;type=image/png&quot;
+</span></code></pre>
+<p>If everything went well, you should see <code>Hello, 25 year old named kristopher!</code>. Experiment to see how you can break it!
+What happens when you leave out the name field in the JSON? How about when one of the multipart fields is left out
+entirely?</p>
+<p><a href="https://github.com/krruzic/multipart-rocket-demo">source code</a></p>
+</div>
+    </div>
+  </article>
+
+          </div>
+        </div>
+    
+  </body>
+</html>
