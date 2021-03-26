@@ -93,6 +93,9 @@ ul {
   max-width: 75%;
   padding-bottom: 0.5vh;
 }
+#sidebar-badge {
+  padding: 1rem 0;
+}
 .about-desc {
   font-size: 1rem;
 }
