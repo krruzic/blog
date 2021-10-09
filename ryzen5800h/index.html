@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+<link rel="stylesheet" href="/css/styles.css" />
+<link rel="icon" type="image/png" href="/favicon.png"/>
+<title>My Thoughts Go Here · Home</title>
+
+  </head>
+  <body>
+    <div id="content">
+        <div id="sidebar">
+          <img src="/me_vertical_dark.jpg" alt="Kristopher Ruzic" id="sidebar-photo"/>
+          <div class="about-desc">
+            <p>I&#39;m Kristopher Ruzic, a software developer from Calgary. See more <a href="/about">about me.</a></p>
+            <a href="/resume.pdf">Download My Resume</a>
+          </div>
+          <a href="https://rms-support-letter.github.io/"><img id="sidebar-badge" src="https://raw.githubusercontent.com/rms-support-letter/rms-support-letter.github.io/master/assets/badge-64-w-border.png" alt="I stand with RMS" /></a>
+        </div>
+        <div id="maincontent">
+          <div class="main-header">
+            <h1>My Thoughts Go Here</h1>
+            <ul class="blognav">
+            
+  <li class="go-back-item"><a href="..">go back</a></li>
+
+              <li><a href="/tags">tags</a></li>
+            </ul>
+          </div>
+          <div class="page-content">
+            
+  <article class="post-container">
+    <div class="post-meta">
+      <p class="post-title"><a href="https://krruzic.xyz/ryzen5800h/">Modern CPUs and sleeping on Linux</a></p>
+      2021-10-08 
+   |
+    
+      <a href="https:&#x2F;&#x2F;krruzic.xyz&#x2F;tags&#x2F;linux&#x2F;" class="post-tag">#linux</a>
+    
+      <a href="https:&#x2F;&#x2F;krruzic.xyz&#x2F;tags&#x2F;xiaomi&#x2F;" class="post-tag">#xiaomi</a>
+    
+      <a href="https:&#x2F;&#x2F;krruzic.xyz&#x2F;tags&#x2F;systemd&#x2F;" class="post-tag">#systemd</a>
+    
+  
+
+    </div>
+    <div class="post">
+      <div class="post-content"><p>The ryzen 7 5800H CPU has some weird sleeping quirks on linux that I couldn't figure out. This <a href="https://gitlab.freedesktop.org/drm/amd/-/issues/1230">looooooooooooooooong thread</a> explains the issue in great detail, but I couldn't understand a word of it. Through fiddling and mashing however I now have things working. I'm documenting my boot parameters and sleep configs here for any future lost souls. My laptop (the 2021 Xiaomi Notebook Pro Ryzen Edition) now correctly sleeps, hibernates and restores from those states just fine. Note this works on Kernel 5.14+</p>
+<span id="continue-reading"></span>
+<p>First follow <a href="https://confluence.jaytaala.com/display/TKB/Use+a+swap+file+and+enable+hibernation+on+Arch+Linux+-+including+on+a+LUKS+root+partition">this guide</a> to setup a swap file to hibernate to. Next, configure <code>/etc/systemd/sleep.conf</code>, we want to hibernate after 20mins of sleeping, and hibernate to disk.</p>
+<pre style="background-color:#191919;">
+<code><span style="color:#ffffff;">[Sleep]
+HibernateDelaySec=1200
+AllowHibernation=yes
+HibernateMode=platform shutdown
+HibernateState=disk
+</span></code></pre>
+<p>To configure sleep settings, we put them in <code>/etc/systemd/logind.conf</code> </p>
+<pre style="background-color:#191919;">
+<code><span style="color:#ffffff;">[Login]
+HandleLidSwitch=suspend-then-hibernate
+</span></code></pre>
+<p>Finally, we need to setup our boot parameters, I have them in my grub config setting <code>GRUB_CMDLINE_LINUX_DEFAULT</code> to <code>quiet splash resume=UUID=PARTUUID_WITH_SWAPFILE resume_offset=SWAPFILEOFFSET amd_iommu=off mem_sleep_default=deep&quot;</code>. The swapfile parameters are explained in the tutorial linked earlier. </p>
+<p>I hope this helps someone! I'm sure there are many working setups but this is good enough for me. I'm not too concerned with battery life, as long as the screen goes off and comes back on!</p>
+</div>
+    </div>
+  </article>
+
+          </div>
+        </div>
+    
+  </body>
+</html>
