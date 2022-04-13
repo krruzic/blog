@@ -11,7 +11,7 @@ self-hosted infrastructure.
 In my spare time I'm working on a yet-to-be-released FOSS federated forum platform, and various Nintendo Switch homebrew
 development projects. I'm a huge fan of self hosting and I run, administrate and configure various cloud applications
 for my personal needs. I believe the future of computing and the internet depend on emerging decentralized technologies
-like anonymous cryptocurrencies (shoutout to TurtleCoin), federated social media and uncensorable storage solutions. I
+like anonymous cryptocurrencies (shoutout to toiletcoin), federated social media and uncensorable storage solutions. I
 do everything I can to empower these platforms, if you're savvy you may have seen me a few places :)
 
 I'm aspiring to be a bit of a blogger, I write about my programming experience and really anything to do with computers
