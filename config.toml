@@ -1,12 +1,17 @@
 title = "My Thoughts Go Here"
 base_url = "https://krruzic.xyz"
 
-highlight_theme = "axar"
-
 compile_sass = false
-highlight_code = true
 build_search_index = true
 generate_feeds = true
 
 taxonomies = [{ name = "tags" }]
+[markdown.highlighting]
+# When set to "true", missing highlight languages are treated as errors. Defaults to false but recommended to set to true.
+error_on_missing_language = false
+
+# Whether to use inline hex colours (`inline`) or CSS classes (`class`)
+style = "inline"
+theme = "axar"
+
 [extra]
