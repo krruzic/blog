@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+<link rel="stylesheet" href="/css/styles.css" />
+<link rel="icon" type="image/png" href="/favicon.png"/>
+<title>My Thoughts Go Here · Home</title>
+
+  </head>
+  <body>
+    <div id="content">
+        <div id="sidebar">
+          <img src="/me_vertical_dark.jpg" alt="Kristopher Ruzic" id="sidebar-photo"/>
+          <div class="about-desc">
+            <p>I&#39;m Kristopher Ruzic, a software developer from Calgary. See more <a href="/about">about me.</a></p>
+            <a href="/resume.pdf">Download My Resume</a>
+          </div>
+          <a href="https://rms-support-letter.github.io/"><img id="sidebar-badge" src="https://raw.githubusercontent.com/rms-support-letter/rms-support-letter.github.io/master/assets/badge-64-w-border.png" alt="I stand with RMS" /></a>
+        </div>
+        <div id="maincontent">
+          <div class="main-header">
+            <h1>My Thoughts Go Here</h1>
+            <ul class="blognav">
+            
+  <li class="go-back-item"><a href="..">go back</a></li>
+
+              <li><a href="/tags">tags</a></li>
+            </ul>
+          </div>
+          <div class="page-content">
+            
+  <article class="post-container">
+    <div class="post-meta">
+      <p class="post-title"><a href="https://krruzic.xyz/pulseaudio/">Play Audio on Two Pulseaudio HDMI outputs; or Adding New ALSA Devices to Pulse</a></p>
+      2020-01-04 
+   |
+    
+      <a href="https://krruzic.xyz/tags/pulseaudio/" class="post-tag">#pulseaudio</a>
+    
+      <a href="https://krruzic.xyz/tags/linux/" class="post-tag">#linux</a>
+    
+  
+
+    </div>
+    <div class="post">
+      <div class="post-content"><p>Pulseaudio's autoconfiguration is very limited and simply selects the first HDMI output per card to create sources with.
+What if you have two monitors with speakers on the same card and want to play different simulatenous streams?</p>
+<span id="continue-reading"></span><h1 id="pulseaudio-and-alsa">PulseAudio and ALSA</h1>
+<p>What's the difference and why do I need two systems to play audio? No idea. What I do know is pulse is built on top of
+alsa and queries alsa for device information. Based on that, we'll need to ask alsa for info on our devices.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #6A737D;"># first list our devices</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">$</span><span style="color: #9ECBFF;"> alsa</span><span style="color: #79B8FF;"> -l</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">card</span><span style="color: #9ECBFF;"> 0: Sound</span><span> [HyperX</span><span style="color: #9ECBFF;"> Virtual Surround Sound], device 0: USB Audio</span><span> [USB</span><span style="color: #9ECBFF;"> Audio]</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">  Subdevices:</span><span style="color: #9ECBFF;"> 1/1</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">  Subdevice</span><span style="color: #6A737D;"> #0: subdevice #0</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">card</span><span style="color: #9ECBFF;"> 1: HDMI</span><span> [HDA</span><span style="color: #9ECBFF;"> ATI HDMI], device 3: HDMI</span><span style="color: #79B8FF;"> 0</span><span> [HDMI</span><span style="color: #9ECBFF;"> 0]</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">  Subdevices:</span><span style="color: #9ECBFF;"> 0/1</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">  Subdevice</span><span style="color: #6A737D;"> #0: subdevice #0</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">card</span><span style="color: #9ECBFF;"> 1: HDMI</span><span> [HDA</span><span style="color: #9ECBFF;"> ATI HDMI], device 7: HDMI</span><span style="color: #79B8FF;"> 1</span><span> [HDMI</span><span style="color: #9ECBFF;"> 1]</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">  Subdevices:</span><span style="color: #9ECBFF;"> 1/1</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">  Subdevice</span><span style="color: #6A737D;"> #0: subdevice #0</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">card</span><span style="color: #9ECBFF;"> 1: HDMI</span><span> [HDA</span><span style="color: #9ECBFF;"> ATI HDMI], device 8: HDMI</span><span style="color: #79B8FF;"> 2</span><span> [HDMI</span><span style="color: #9ECBFF;"> 2]</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">  Subdevices:</span><span style="color: #9ECBFF;"> 0/1</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">  Subdevice</span><span style="color: #6A737D;"> #0: subdevice #0</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">card</span><span style="color: #9ECBFF;"> 1: HDMI</span><span> [HDA</span><span style="color: #9ECBFF;"> ATI HDMI], device 9: HDMI</span><span style="color: #79B8FF;"> 3</span><span> [HDMI</span><span style="color: #9ECBFF;"> 3]</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">  Subdevices:</span><span style="color: #9ECBFF;"> 1/1</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">  Subdevice</span><span style="color: #6A737D;"> #0: subdevice #0</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">card</span><span style="color: #9ECBFF;"> 2: Generic</span><span> [HD-Audio</span><span style="color: #9ECBFF;"> Generic], device 0: ALC1220 Analog</span><span> [ALC1220</span><span style="color: #9ECBFF;"> Analog]</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">  Subdevices:</span><span style="color: #9ECBFF;"> 1/1</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">  Subdevice</span><span style="color: #6A737D;"> #0: subdevice #0</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">card</span><span style="color: #9ECBFF;"> 2: Generic</span><span> [HD-Audio</span><span style="color: #9ECBFF;"> Generic], device 1: ALC1220 Digital</span><span> [ALC1220</span><span style="color: #9ECBFF;"> Digital]</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">  Subdevices:</span><span style="color: #9ECBFF;"> 1/1</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">  Subdevice</span><span style="color: #6A737D;"> #0: subdevice #0</span></span></code></pre>
+<p>You should get similar output to the above, but with your own card information. On my computer I have a headset plugged
+in (<code>card 0</code>), my GPU with 4 hdmi ports (<code>card 1 devices 3,7,8,9</code>) and my motherboard's audio controller. In my case, I
+want to add card 1 device 8 to pulseaudio so I can play sound out of my second monitors speaker. By default pulseaudio
+adds HDMI 0 (card 1 device 3).</p>
+<h1 id="configuring-pulse">Configuring Pulse</h1>
+<p>Open up <code>/etc/pulse/default.pa</code> with your favourite editor as root</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #B392F0;">$</span><span style="color: #9ECBFF;"> sudo vim /etc/pulse/default.pa</span></span>
+<span class="giallo-l"><span style="color: #6A737D;"># add this line to the top of the file, changing 1 and 8 to match your selected</span></span>
+<span class="giallo-l"><span style="color: #6A737D;"># card and device. Set the description and sink_name to whatever you&#39;d like</span></span>
+<span class="giallo-l"><span style="color: #B392F0;">load-module</span><span style="color: #9ECBFF;"> module-alsa-sink device=&quot;hw:1,8&quot; sink_properties=&quot;device.description=&#39;Secondary HDMI&#39;&quot; sink_name=second_hdmi</span></span></code></pre>
+<p>Now that you have your device added you'll need to restart pulse. Once restarted you should see your newly added device
+in whatever GUI audio control program you use.</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #B392F0;">$</span><span style="color: #9ECBFF;"> pulseaudio</span><span style="color: #79B8FF;"> --kill</span><span>;</span><span style="color: #B392F0;"> sleep</span><span style="color: #79B8FF;"> 1</span><span>;</span><span style="color: #B392F0;"> pulseaudio</span><span style="color: #79B8FF;"> --start</span></span></code></pre><h1 id="issues">Issues</h1>
+<p>One new issue I've encountered on a newer version of pulse is that adding a line that references the same card as a card
+automatically added by pulse (ex. adding a second HDMI output device) will delete the auto-configured device. To fix
+this, just add another line to <code>default.pa</code> referencing your auto-configured device.</p>
+<h1 id="sources">Sources</h1>
+<p><a rel="external" href="https://wiki.archlinux.org/index.php/PulseAudio/Examples#Simultaneous_HDMI_and_analog_output">Arch Wiki</a> - Discusses
+playing the same audio over two outputs</p>
+</div>
+    </div>
+  </article>
+
+          </div>
+        </div>
+    
+  </body>
+</html>

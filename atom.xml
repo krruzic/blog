@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>My Thoughts Go Here</title>
+    <link rel="self" type="application/atom+xml" href="https://krruzic.xyz/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://krruzic.xyz"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2021-10-08T00:00:00+00:00</updated>
+    <id>https://krruzic.xyz/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Modern CPUs and sleeping on Linux</title>
+        <published>2021-10-08T00:00:00+00:00</published>
+        <updated>2021-10-08T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://krruzic.xyz/ryzen5800h/"/>
+        <id>https://krruzic.xyz/ryzen5800h/</id>
+        
+        <summary type="html">&lt;p&gt;The ryzen 7 5800H CPU has some weird sleeping quirks on linux that I couldn&#x27;t figure out. This &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;gitlab.freedesktop.org&#x2F;drm&#x2F;amd&#x2F;-&#x2F;issues&#x2F;1230&quot;&gt;looooooooooooooooong thread&lt;&#x2F;a&gt; explains the issue in great detail, but I couldn&#x27;t understand a word of it. Through fiddling and mashing however I now have things working. I&#x27;m documenting my boot parameters and sleep configs here for any future lost souls. My laptop (the 2021 Xiaomi Notebook Pro Ryzen Edition) now correctly sleeps, hibernates and restores from those states just fine. Note this works on Kernel 5.14+&lt;&#x2F;p&gt;</summary>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>New Theme, Who Dis?</title>
+        <published>2021-01-14T00:00:00+00:00</published>
+        <updated>2021-01-14T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://krruzic.xyz/newtheme/"/>
+        <id>https://krruzic.xyz/newtheme/</id>
+        
+        <summary type="html">&lt;p&gt;It&#x27;s been just over a year since my last blog post and I&#x27;m back, with a fresh theme made from scratch! There&#x27;s not much
+to report on regarding the new blog, I&#x27;m still running &lt;a rel=&quot;external&quot; href=&quot;https:&#x2F;&#x2F;getzola.org&quot;&gt;Zola&lt;&#x2F;a&gt; but I&#x27;m now hosting on github pages.
+The handmade theme has no external dependencies and is a ton of cobbled together css, but it works.&lt;&#x2F;p&gt;</summary>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>About Kristopher Ruzic</title>
+        <published>2021-01-11T00:00:00+00:00</published>
+        <updated>2021-01-11T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://krruzic.xyz/about/"/>
+        <id>https://krruzic.xyz/about/</id>
+        
+        <content type="html" xml:base="https://krruzic.xyz/about/">&lt;p&gt;Hi I&#x27;m Kristopher Ruzic, a generalist software programmer and passionate advocate for FOSS, decentralized computing and
+self-hosted infrastructure.&lt;&#x2F;p&gt;
+&lt;p&gt;In my spare time I&#x27;m working on a yet-to-be-released FOSS federated forum platform, and various Nintendo Switch homebrew
+development projects. I&#x27;m a huge fan of self hosting and I run, administrate and configure various cloud applications
+for my personal needs. I believe the future of computing and the internet depend on emerging decentralized technologies
+like anonymous cryptocurrencies (shoutout to TurtleCoin), federated social media and uncensorable storage solutions. I
+do everything I can to empower these platforms, if you&#x27;re savvy you may have seen me a few places :)&lt;&#x2F;p&gt;
+&lt;p&gt;I&#x27;m aspiring to be a bit of a blogger, I write about my programming experience and really anything to do with computers
+here. If you&#x27;d like to get in touch or learn more about me, please see my CV.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Play Audio on Two Pulseaudio HDMI outputs; or Adding New ALSA Devices to Pulse</title>
+        <published>2020-01-04T00:00:00+00:00</published>
+        <updated>2020-01-04T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://krruzic.xyz/pulseaudio/"/>
+        <id>https://krruzic.xyz/pulseaudio/</id>
+        
+        <summary type="html">&lt;p&gt;Pulseaudio&#x27;s autoconfiguration is very limited and simply selects the first HDMI output per card to create sources with.
+What if you have two monitors with speakers on the same card and want to play different simulatenous streams?&lt;&#x2F;p&gt;</summary>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Rocket.rs and Multipart Forms</title>
+        <published>2019-12-27T00:00:00+00:00</published>
+        <updated>2019-12-27T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://krruzic.xyz/rocket-multipart/"/>
+        <id>https://krruzic.xyz/rocket-multipart/</id>
+        
+        <summary type="html">&lt;p&gt;Recently I&#x27;ve been working on a rust web service written using Rocket and Diesel. A big issue I came across was handling
+muitpart forms with &lt;code&gt;content-type: multipart&#x2F;form-data&lt;&#x2F;code&gt;. Rocket has yet to add official support for this, but you can
+hack it in fairly easily thanks to the Request Guard system.&lt;&#x2F;p&gt;</summary>
+        
+    </entry>
+    <entry xml:lang="en">
+        <title>Supicious Subdomain Takeover Investigation</title>
+        <published>2019-12-26T00:00:00+00:00</published>
+        <updated>2019-12-26T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              Unknown
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://krruzic.xyz/tsn-hack/"/>
+        <id>https://krruzic.xyz/tsn-hack/</id>
+        
+        <summary type="html">&lt;p&gt;I stumbled upon strange search engine results leading to pages on a large corporate subdomain. These pages load
+obfuscated and encrypted code from a myriad of domains, and it went un-noticed for months. By the time I got around to
+finally writing this, I went and checked and it had been fixed.&lt;&#x2F;p&gt;</summary>
+        
+    </entry>
+</feed>
